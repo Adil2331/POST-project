@@ -1,27 +1,72 @@
 import React from 'react';
-// import './Post.modul.scss'
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-// import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-// import Paper from '@mui/material/Paper';
-// import Button from '@mui/material/Button';
 import { Container } from '@mui/system';
-import items from '../data/items';
-// import { Modal } from './Modal';
 import { WinModal } from './WinModal';
-
-
+import axios from 'axios';
+import { Pagination, TextField } from '@mui/material';
+import debounce from 'lodash.debounce';
 
 function Post() {
-  const [lists, setLists] = React.useState(items,  {newName: ''})
-  console.log(lists)
+  const [datas, setDatas] = React.useState();
+  // const [post, setPost] = React.useState(0);
+  const [page, setPage] = React.useState(1);
+  const [search, setSearch] = React.useState('');
+  const [searchValue, setSearchValue] = React.useState('');
+
+  React.useEffect(() => {
+    axios
+      .get(
+        `https://64198aaac152063412c5009e.mockapi.io/items/?page=${page}&limit=10`
+      )
+      .then((res) => {
+        setDatas(res.data);
+      });
+  }, [page]);
+
+  // React.useEffect(() => {
+  //   axios
+  //     .get(
+  //       `https://64198aaac152063412c5009e.mockapi.io/items`
+  //     )
+  //     .then((res) => {
+  //       setPost(res.data.length);
+  //     });
+  // }, [post]);
+
+  // React.useEffect(() => {
+  //   axios
+  //   .put(`https://64198aaac152063412c5009e.mockapi.io/items/$`)
+  //   .then((res) => {
+  //     console.log(res.data);
+  //   })
+  // }, [datas]);
+  // console.log('datas', datas);
+
+  const updateSearchValue = React.useCallback(
+    debounce((str) => {
+      setSearchValue(str);
+    }, 1000),
+    []
+  );
+
+  const onChangeInput = (event) => {
+    setSearch(event.target.value);
+    updateSearchValue(event.target.value);
+  };
 
   return (
-    <Container sx={{mt:5}}>
+    <Container sx={{ mt: 5 }}>
+      <TextField   
+        fullWidth
+        sx={{ mb: 5 }}
+        placeholder={'search.....'}
+        value={search}
+        onChange={(event) => onChangeInput(event)}
+      />
       <Table>
         <TableHead>
           <TableRow>
@@ -34,20 +79,46 @@ function Post() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {items.map((el) => (
-            <TableRow key={el.id}>
-              <TableCell>{el.id}</TableCell>
-              <TableCell>{el.name}</TableCell>
-              <TableCell>{el.study}</TableCell>
-              <TableCell>{el.work}</TableCell>
-              <TableCell>{el.phone}</TableCell>
-              <TableCell >
-                <WinModal key={el.id} {...el}  lists={lists} setLists={setLists}/>
-              </TableCell>
-            </TableRow>
-          ))}
+          {datas &&
+            datas
+              .filter((obj) => {
+                const searchLower = searchValue.toLowerCase();
+                return (
+                  obj.name.toLowerCase().includes(searchLower) ||
+                  obj.study.toLowerCase().includes(searchLower) ||
+                  obj.work.toLowerCase().includes(searchLower) ||
+                  obj.phone
+                    .toLowerCase()
+                    .replace(' ', '')
+                    .includes(searchLower.replace(' ', ''))
+                );
+              })
+              .map((el) => (
+                <TableRow key={el.id}>
+                  <TableCell>{el.id}</TableCell>
+                  <TableCell>{el.name}</TableCell>
+                  <TableCell>{el.study}</TableCell>
+                  <TableCell>{el.work}</TableCell>
+                  <TableCell>{el.phone}</TableCell>
+                  <TableCell>
+                    <WinModal
+                      key={el.id}
+                      lists={datas}
+                      element={el}
+                      setLists={setDatas}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
         </TableBody>
       </Table>
+      <Pagination
+        sx={{ ml: 50, mt: 5, mb: 5 }}
+        count={5}
+        page={page}
+        limit={10}
+        onChange={(_, num) => setPage(num)}
+      />
     </Container>
   );
 }
