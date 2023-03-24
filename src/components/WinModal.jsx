@@ -77,7 +77,7 @@ export const WinModal = ({ element, lists, setLists }) => {
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <input
               type="text"
-              style={{ width: 400, border: 'none', fontSize: 20 }}
+              style={{ width: 400, height: 40 , fontSize: 20 }}
               value={study}
               onChange={(e) => setStudy(e.target.value)}
             />
@@ -85,7 +85,7 @@ export const WinModal = ({ element, lists, setLists }) => {
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <input
               type="text"
-              style={{ width: 400, border: 'none', fontSize: 20 }}
+              style={{ width: 400,  height: 40 , fontSize: 20 }}
               value={work}
               onChange={(e) => setWork(e.target.value)}
             />
@@ -93,7 +93,7 @@ export const WinModal = ({ element, lists, setLists }) => {
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <input
               type="text"
-              style={{ width: 400, border: 'none', fontSize: 20 }}
+              style={{ width: 400, height: 40 , fontSize: 20 }}
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
