@@ -9,6 +9,7 @@ import { WinModal } from './WinModal';
 import axios from 'axios';
 import { Pagination, TextField } from '@mui/material';
 import debounce from 'lodash.debounce';
+import { Link } from 'react-router-dom';
 
 function Post() {
   const [datas, setDatas] = React.useState();
@@ -60,13 +61,23 @@ function Post() {
 
   return (
     <Container sx={{ mt: 5 }}>
-      <TextField   
-        fullWidth
-        sx={{ mb: 5 }}
-        placeholder={'search.....'}
-        value={search}
-        onChange={(event) => onChangeInput(event)}
-      />
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          marginBottom: '30px',
+        }}
+      >
+        <TextField
+          // width={80%}
+          sx={{ width: '80%' }}
+          placeholder={'search.....'}
+          value={search}
+          onChange={(event) => onChangeInput(event)}
+        />
+        <Link to="/login">Log out</Link>
+      </div>
       <Table>
         <TableHead>
           <TableRow>

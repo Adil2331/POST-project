@@ -1,12 +1,15 @@
 import './App.css';
 import Post from './components/Post';
+import Login from './components/Login';
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
-  console.log('hello world');
-
   return (
     <div className="App">
-      <Post />
+      <Routes>
+        <Route path='/' element={<Post />}/>
+        <Route path='/login' element={<Login/>}/>
+      </Routes>
     </div>
   );
 }
